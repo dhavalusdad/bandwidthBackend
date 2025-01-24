@@ -106,6 +106,36 @@ app.get("/api/test", (req, res) => {
   res.json({ message: "Backend is running successfully on Render!" });
 });
 
+app.post("/call-answer", (req, res) => {
+  console.log("call-answer",req.body);
+  const bxmlResponse = `
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Response>
+      <SpeakSentence>
+        You have an incoming call from ${req.body.from}. Please answer the call.
+      </SpeakSentence>
+      <Answer/>
+    </Response>
+  `;
+  res.set("Content-Type", "application/xml");
+  res.send(bxmlResponse);
+});
+
+//transfer call 
+app.post("/transfer-call", (req, res) => {
+  console.log("transfer-call", req.body);
+  const bxmlResponse = `
+    <?xml version="1.0" encoding="UTF-8"?>
+      <Response>
+       <Transfer transferCallerId="+19043001212">
+        <PhoneNumber>${req.body.phone}</PhoneNumber>
+       </Transfer>
+      </Response>
+  `;
+  res.set("Content-Type", "application/xml");
+  res.send(bxmlResponse);
+});
+
 // Example POST route
 app.post("/api/data", (req, res) => {
   const { name } = req.body;
