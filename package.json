@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "@bandwidth/bxml": "^2.9.0",
+    "@bandwidth/voice": "^6.1.1",
+    "axios": "^1.7.7",
+    "bandwidth-sdk": "^3.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "nodemon": "^3.1.9"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "name": "backend-bandwidth",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
