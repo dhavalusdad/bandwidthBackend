@@ -11,7 +11,8 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "build": "npm install && npm start"
+    "build": "npm install && npm start",
+    "dev": "nodemon src/server.js"
   },
   "name": "backend-bandwidth",
   "version": "1.0.0",

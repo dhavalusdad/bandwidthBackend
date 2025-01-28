@@ -251,12 +251,89 @@
 //   bridgeCalls('c-95ac8d6e-1a31c52e-b38f-4198-93c1-51633ec68f8d', 'c-95ac8d6e-1a31c52e-b38f-4198-93c1-51633ec68f8d');
 // });
 
-const {
-  CallsApi,
-  Configuration,
-  CallbackMethodEnum,
-} = require("bandwidth-sdk");
-const axios = require("axios");
+// const {
+//   CallsApi,
+//   Configuration,
+//   CallbackMethodEnum,
+// } = require("bandwidth-sdk");
+// const axios = require("axios");
+
+// const BW_USERNAME = "4d16c81d-403b-452c-9f22-c4dbc1923e67";
+// const BW_PASSWORD = "cqk9uju2XMZ@mrx4cdc";
+// const BW_ACCOUNT_ID = "5010502";
+// const BW_VOICE_APPLICATION_ID = "f9012e0f-96b0-42c1-a114-b9623f2aeb95";
+// const BW_NUMBER = "+19043001212";
+// const USER_NUMBER = "+18024417136";
+// const BASE_CALLBACK_URL =
+//   "https://e5d1-103-215-158-90.ngrok-free.app";
+
+// const BaseUrl = "https://voice.bandwidth.com/api/v2";
+// const config = new Configuration({
+//   BW_USERNAME,
+//   BW_PASSWORD,
+// });
+
+// const callsApi = new CallsApi(config);
+
+// const callBody = {
+//   applicationId: BW_VOICE_APPLICATION_ID,
+//   to: USER_NUMBER,
+//   from: BW_NUMBER,
+//   displayName: "NodeJS SDK",
+//   answerUrl: `${BASE_CALLBACK_URL}/test`,
+//   answerMethod: CallbackMethodEnum.Post,
+//   disconnectUrl: `${BASE_CALLBACK_URL}/test`,
+//   disconnectMethod: CallbackMethodEnum.Post,
+//   callTimeout: 30.0,
+//   callbackTimeout: 15.0,
+// };
+
+// const makeCall = async () => {
+//   try {
+//     // const response = await callsApi.createCall(BW_ACCOUNT_ID, callBody);
+//     // console.log("Call created:", response.body);
+//     // const callId = response.body.id;
+//     // return callId;
+
+//     const { status, data } = await callsApi.createCall(BW_ACCOUNT_ID, callBody);
+
+//     // const axiosResponse = await axios.post(
+//     //   `${BaseUrl}/accounts/${BW_ACCOUNT_ID}/calls`,
+//     //   {
+//     //     answerUrl: "https://bandwidthbackend.onrender.com/call-answer",
+//     //     applicationId: BW_VOICE_APPLICATION_ID,
+//     //     from: BW_NUMBER,
+//     //     to: USER_NUMBER,
+//     //     answerMethod: "POST",
+//     //   },
+//     //   {
+//     //     headers: {
+//     //       Authorization: `Basic ${Buffer.from(
+//     //         `${BW_USERNAME}:${BW_PASSWORD}`
+//     //       ).toString("base64")}`,
+//     //       "Content-Type": "application/json",
+//     //     },
+//     //   }
+//     // );
+
+//     // console.log("Axios response:", axiosResponse.data);
+//     // return axiosResponse;
+
+//     console.log("Call status:", status);
+//     console.log("Call created:", data);
+//   } catch (error) {
+//     console.error("Error creating the call:", error);
+//   }
+// };
+
+// makeCall();
+
+// // const { status, data } = await callsApi.createCall(BW_ACCOUNT_ID, callBody);
+// // console.log(status, data);
+
+
+const { Client, ApiController } =require ('@bandwidth/voice');
+
 
 const BW_USERNAME = "4d16c81d-403b-452c-9f22-c4dbc1923e67";
 const BW_PASSWORD = "cqk9uju2XMZ@mrx4cdc";
@@ -264,64 +341,32 @@ const BW_ACCOUNT_ID = "5010502";
 const BW_VOICE_APPLICATION_ID = "f9012e0f-96b0-42c1-a114-b9623f2aeb95";
 const BW_NUMBER = "+19043001212";
 const USER_NUMBER = "+18024417136";
-const BASE_CALLBACK_URL =
-  "https://9447-103-215-158-90.ngrok-free.app/call-answer";
+const VOICE_CALLBACK_URL =
+  "https://e5d1-103-215-158-90.ngrok-free.app/api/test";
 
-const BaseUrl = "https://voice.bandwidth.com/api/v2";
-const config = new Configuration({
-  BW_USERNAME,
-  BW_PASSWORD,
+const client = new Client({
+  basicAuthUserName: BW_USERNAME,
+  basicAuthPassword: BW_PASSWORD
 });
 
-const callsApi = new CallsApi(config);
+const controller = new ApiController(client);
 
-const callBody = {
-  applicationId: BW_VOICE_APPLICATION_ID,
-  to: USER_NUMBER,
-  from: BW_NUMBER,
-  displayName: "NodeJS SDK",
-  answerUrl: `${BASE_CALLBACK_URL}/callbacks/answer`,
-  answerMethod: CallbackMethodEnum.Post,
-  disconnectUrl: `${BASE_CALLBACK_URL}/callbacks/disconnect`,
-  disconnectMethod: CallbackMethodEnum.Get,
-  callTimeout: 30.0,
-  callbackTimeout: 15.0,
-};
+const accountId = BW_ACCOUNT_ID;
 
-const makeCall = async () => {
+const makeCall = async function() {
   try {
-    // const response = await callsApi.createCall(BW_ACCOUNT_ID, callBody);
-    // console.log("Call created:", response.body);
-    // const callId = response.body.id;
-    // return callId;
-
-    const axiosResponse = await axios.post(
-      `${BaseUrl}/accounts/${BW_ACCOUNT_ID}/calls`,
-      {
-        answerUrl: "https://bandwidthbackend.onrender.com/call-answer",
+    const response = await controller.createCall(accountId, {
         applicationId: BW_VOICE_APPLICATION_ID,
-        from: BW_NUMBER,
         to: USER_NUMBER,
-        answerMethod: "POST",
-      },
-      {
-        headers: {
-          Authorization: `Basic ${Buffer.from(
-            `${BW_USERNAME}:${BW_PASSWORD}`
-          ).toString("base64")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    console.log("Axios response:", axiosResponse.data);
-    return axiosResponse;
-  } catch (error) {
-    console.error("Error creating the call:", error);
+        from: BW_NUMBER,
+        answerUrl: VOICE_CALLBACK_URL,
+        answerMethod: 'POST',
+        callTimeout: 30
+    });
+    console.log(response.body);
+  } catch(error) {
+      console.error(error);
   }
-};
+}
 
 makeCall();
-
-// const { status, data } = await callsApi.createCall(BW_ACCOUNT_ID, callBody);
-// console.log(status, data);
